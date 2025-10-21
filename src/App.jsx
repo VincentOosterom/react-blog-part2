@@ -7,6 +7,9 @@ function App() {
     const [error, setError] = React.useState("");
     const [deleteSuccess, setDeleteSuccess] = React.useState(false);
 
+    const [updateSuccess, setUpdateSuccess] = React.useState(false);
+    const [errorUpdate, setErrorUpdate] = React.useState(false);
+
     async function getData() {
         try {
             const response = await axios.get('https://novi-backend-api-wgsgz.ondigitalocean.app/api/blogposts',
@@ -27,11 +30,11 @@ function App() {
                 headers: {
                     'novi-education-project-id': "d6200c4d-2a0a-435d-aba6-6171c6a7296e"
                 }
-
             })
-            console.log(response)
+            console.log("Hier is post nummer 6", response.data)
         } catch (e) {
-            console.log('Fout bij het ophalen van de blogs')
+            console.log('Fout bij het ophalen van de blog nummer 6', e)
+
         }
     }
 
@@ -56,7 +59,6 @@ function App() {
             setSuccess("true")
             console.log(response.data)
         } catch (e) {
-            console.log('Fout bij het plaatsten van de blog', e)
             setError("Het is niet gelukt om jouw blog te plaatsen")
         }
     }
@@ -74,6 +76,33 @@ function App() {
         }
     }
 
+    async function updatePost() {
+        try {
+            const respone = await axios.put('https://novi-backend-api-wgsgz.ondigitalocean.app/api/blogposts/18',
+                {
+                    "title": "Post is gewijzigd",
+                    "subtitle": "Wat gebruiker heeft ingevuld",
+                    "content": "Wat gebruiker heeft ingevuld, in dit geval minder dan 100 woorden",
+                    "author": "Vincent Oosterom",
+                    "created": "2023-09-21T09:30:00Z",
+                    "readTime": 1,
+                    "comments": 0,
+                    "shares": 0,
+                    "id": 18,
+                }, {
+                    headers: {
+                        'novi-education-project-id': "d6200c4d-2a0a-435d-aba6-6171c6a7296e"
+                    }
+                })
+            console.log("Post is gewijzigd")
+            setUpdateSuccess("true")
+        } catch (e) {
+            console.log('Het is niet gelukt om de post te wijzigen', e)
+            setErrorUpdate("Het is niet gelukt om jouw post te wijzigen")
+
+        }
+    }
+
     return (
         <>
             <div className="button-section">
@@ -81,8 +110,12 @@ function App() {
                 <button type="button" onClick={getPost}>Haal post 6 op</button>
                 <button type="button" onClick={addPost}>Plaats blogs post</button>
                 <button type="button" onClick={deletePost}>Verwijder blog</button>
-                {success ? <p>Successfully added.</p> : <p>{error}</p>}
+                <button type="button" onClick={updatePost}>Wijzig post</button>
+
+                {success ? <p>Blog is succesvol geplaatst</p> : <p>{error}</p>}
                 {deleteSuccess ? <p>Post is succesvol verwijderd</p> : ""}
+                {updateSuccess ? <p>Post is succesvol geupdate</p> : ""}
+                {errorUpdate ? <p>Post is niet geupdate</p> : ""}
             </div>
         </>
     )
